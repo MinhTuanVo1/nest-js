@@ -15,6 +15,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { PaginateDto, PaginateResultDto } from 'src/common/dto';
 import * as fs from 'fs';
 import { join } from 'path';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
@@ -157,7 +158,9 @@ export class UserService {
 
     fs.unlinkSync(filePath);
 
-    const avatar = `http://localhost:3000/avatar/${file.filename}`;
+    const config = new ConfigService();
+
+    const avatar = `${config.get('DOMAIN')}/avatar/${file.filename}`;
 
     await this.userRepository.update(id, { avatar: avatar });
 

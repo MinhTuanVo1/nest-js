@@ -36,6 +36,7 @@ import { diskStorage } from 'multer';
 import { Helper } from 'src/common/helper/helper';
 import { of } from 'rxjs';
 import { join } from 'path';
+import { ConfigService } from '@nestjs/config';
 
 @ApiTags('users')
 @Controller('users')
@@ -110,7 +111,8 @@ export class UserController {
     @Body() user: CreateUserDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<OutputUserDto> {
-    user.avatar = `http://localhost:3000/avatar/${file.filename}`;
+    const config = new ConfigService();
+    user.avatar = `${config.get('DOMAIN')}/avatar/${file.filename}`;
     return this.userServie.create(user);
   }
 
